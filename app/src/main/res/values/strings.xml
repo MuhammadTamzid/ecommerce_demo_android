@@ -10,6 +10,14 @@
     <string name="image_drawer_category_indicator_description">Click to show submenu</string>
     <string name="Another_click_for_leaving_app">Another click for leaving app</string>
 
+    <!--Permission rationale messages-->
+    <string name="permission_storage_rationale">Need to access storage</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="permission_never_ask_again">Will never ask again</string>
+    <string name="button_allow">Allow</string>
+    <string name="button_deny">Deny</string>
+    <string name="button_ok">OK</string>
+
     <string-array name="film_genre">
         <item>Action</item>
         <item>Comedy</item>

@@ -1,8 +1,10 @@
 package com.pastime.avishek.e_commercedemo.activity;
 
+import android.Manifest;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -19,12 +21,18 @@ import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 
-import static com.pastime.avishek.e_commercedemo.constants.GlobalConstants.*;
+import static com.pastime.avishek.e_commercedemo.constants.GlobalConstants.EXTRA_MESSAGE;
 
+@RuntimePermissions
 public class MainActivity extends BaseActivity implements DrawerSubmenuListener {
-
 
     @BindView(R.id.drawer_layout_main)
     DrawerLayout drawerLayout;
@@ -49,6 +57,8 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
         setUpDrawerFragment();
 
         setUpDrawer();
+
+        MainActivityPermissionsDispatcher.openStorageWithCheck(this);
     }
 
     private void setUpToolbar() {
@@ -90,7 +100,7 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
         mDrawerFragment.setUp(this, drawerLayout);
     }
 
-    private void navigateToHomeFragment(String value){
+    private void navigateToHomeFragment(String value) {
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_MESSAGE, value);
         HomeFragment homeFragment = new HomeFragment();
@@ -153,7 +163,7 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
         if (mDrawerFragment == null || !mDrawerFragment.onBackHide()) {
             // If app should be finished or some fragment transaction still remains on backStack,
             // let the system do the job.
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0 || isAppReadyToFinish) {
+            if (getFragmentManager().getBackStackEntryCount() > 0 || isAppReadyToFinish) {
                 super.onBackPressed();
             } else {
                 // BackStack is empty. For closing the app user have to tap the back button two
@@ -168,5 +178,42 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
                 }, 2000);
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission
+            .WRITE_EXTERNAL_STORAGE})
+    void openStorage() {
+        showToastMessage("Permission granted");
+    }
+
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission
+            .WRITE_EXTERNAL_STORAGE})
+    void showRationaleForStorage(PermissionRequest request) {
+        // NOTE: Show a rationale to explain why the permission is needed, e.g. with a dialog or
+        // in this case a snackbar.
+        // Call proceed() or cancel() on the provided PermissionRequest to continue or abort
+        //showRationaleDialog(R.string.permission_storage_rationale, request);
+        showRationaleSnackbar(drawerLayout, R.string.permission_storage_rationale, request);
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission
+            .WRITE_EXTERNAL_STORAGE})
+    void onStorageDenied() {
+        // NOTE: Deal with a denied permission, e.g. by showing specific UI
+        // or disabling certain functionality
+        showToastMessage(getResources().getString(R.string.permission_denied));
+    }
+
+    @OnNeverAskAgain({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission
+            .WRITE_EXTERNAL_STORAGE})
+    void onStorageNeverAskAgain() {
+        showToastMessage(getResources().getString(R.string.permission_never_ask_again));
     }
 }
