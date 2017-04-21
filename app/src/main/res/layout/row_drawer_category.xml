@@ -5,8 +5,8 @@
                 android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/linear_drawer_row"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linear_drawer_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -17,6 +17,7 @@
             android:id="@+id/text_drawer_category"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginBottom="12dp"
             android:layout_marginEnd="4dp"
             android:layout_marginLeft="15dp"
@@ -28,8 +29,7 @@
             android:fontFamily="sans-serif-light"
             android:textSize="20sp"
             android:textStyle="normal"
-            tools:text="Just arrived"
-            android:layout_gravity="center_vertical"/>
+            tools:text="Just arrived"/>
 
         <ImageView
             android:id="@+id/image_drawer_category_indicator"
@@ -38,14 +38,14 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"
             android:layout_marginRight="12dp"
-            android:contentDescription="click meh!"
+            android:contentDescription="@string/image_drawer_category_indicator_description"
             android:src="@drawable/arrow_right_black"/>
     </LinearLayout>
 
     <View
         android:id="@+id/view_drawer_category_divider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/drawer_category_divider_height"
+        android:layout_height="@dimen/divider_height"
         android:layout_below="@id/linear_drawer_row"
         android:background="@android:color/darker_gray"/>
 </RelativeLayout>

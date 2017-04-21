@@ -2,6 +2,7 @@ package com.pastime.avishek.e_commercedemo.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -10,32 +11,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 
 import com.pastime.avishek.e_commercedemo.R;
-
-import java.util.List;
-import java.util.Map;
+import com.pastime.avishek.e_commercedemo.fragment.DrawerFragment;
+import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements DrawerSubmenuListener {
 
     @BindView(R.id.drawer_layout_main)
     DrawerLayout drawerLayout;
 
-   /* @BindView(R.id.drawer_list)
-    ExpandableListView expandableListView;*/
-
-    private String[] mDrawerItems;
-    private List<String> mExpandableListTitles;
-    private Map<String, List<String>> mExpandableListData;
-    private ExpandableListAdapter mExpandableListAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
-    private String mActivityTitle;
-    private ActionBar mActionBar;
+    private ActionBar mActionBar; // might be needed later
+    private DrawerFragment mDrawerFragment;
+    /**
+     * Indicates that app will be closed on next back press
+     */
+    private boolean isAppReadyToFinish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +39,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.content_main);
 
         ButterKnife.bind(this);
+
         setUpToolbar();
 
-        //mActivityTitle = getTitle().toString();
+        setUpDrawerFragment();
 
-//        initItems();
-//        getData();
-//        addDrawerItems();
         setUpDrawer();
     }
 
@@ -86,6 +80,12 @@ public class MainActivity extends BaseActivity {
         drawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    private void setUpDrawerFragment() {
+        mDrawerFragment = (DrawerFragment) getFragmentManager().findFragmentById(R.id
+                .main_navigation_drawer_fragment);
+        mDrawerFragment.setUp(this, drawerLayout);
+    }
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -120,72 +120,38 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*private void addDrawerItems() {
-        mExpandableListAdapter = new CustomExpandableListAdapter(this, mExpandableListTitles,
-                mExpandableListData);
-        expandableListView.setAdapter(mExpandableListAdapter);
-        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                getSupportActionBar().setTitle(mExpandableListTitles.get(groupPosition).toString());
-            }
-        });
-
-        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                getSupportActionBar().setTitle(R.string.film_genres);
-            }
-        });
-
-        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int
-                    groupPosition, long id) {
-                if (mExpandableListData.get(mExpandableListTitles.get(groupPosition)) != null &&
-                        mExpandableListData.get(mExpandableListTitles.get(groupPosition)).size()
-                                == 0) {
-                    expandableListView.collapseGroup(groupPosition);
-                }
-                return false;
-            }
-        });
-
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                String selectedItem = ((List) (mExpandableListData.get(mExpandableListTitles.get
-                        (groupPosition))))
-                        .get(childPosition).toString();
-                getSupportActionBar().setTitle(selectedItem);
-
-                *//*if (mDrawerItems[0].equals(mExpandableListTitles.get(groupPosition))) {
-                    mNavigationManager.showFragmentAction(selectedItem);
-                } else if (items[1].equals(mExpandableListTitles.get(groupPosition))) {
-                    mNavigationManager.showFragmentComedy(selectedItem);
-                } else if (items[2].equals(mExpandableListTitles.get(groupPosition))) {
-                    mNavigationManager.showFragmentDrama(selectedItem);
-                } else if (items[3].equals(mExpandableListTitles.get(groupPosition))) {
-                    mNavigationManager.showFragmentMusical(selectedItem);
-                } else if (items[4].equals(mExpandableListTitles.get(groupPosition))) {
-                    mNavigationManager.showFragmentThriller(selectedItem);
-                } else {
-                    throw new IllegalArgumentException("Not supported fragment type");
-                }*//*
-
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return false;
-            }
-        });
+    @Override
+    public void onSubmenuGroupClicked(int groupPosition, String groupName) {
+        showToastMessage(groupName);
     }
 
-    private void initItems() {
-        mDrawerItems = getResources().getStringArray(R.array.film_genre);
+    @Override
+    public void onSubmenuChildClicked(int groupPosition, int childPosition, String childName) {
+        showToastMessage(childName);
+        mDrawerFragment.getDrawerView().closeDrawer();
     }
 
-    public void getData() {
-        mExpandableListData = ExpandableListDataSource.getData(this);
-        mExpandableListTitles = new ArrayList<>(mExpandableListData.keySet());
-    }*/
+    @Override
+    public void onBackPressed() {
+        // If back button pressed, try close drawer if exist and is open. If drawer is already
+        // closed continue.
+        if (mDrawerFragment == null || !mDrawerFragment.onBackHide()) {
+            // If app should be finished or some fragment transaction still remains on backStack,
+            // let the system do the job.
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0 || isAppReadyToFinish) {
+                super.onBackPressed();
+            } else {
+                // BackStack is empty. For closing the app user have to tap the back button two
+                // times in two seconds.
+                showToastMessage(getString(R.string.Another_click_for_leaving_app));
+                isAppReadyToFinish = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isAppReadyToFinish = false;
+                    }
+                }, 2000);
+            }
+        }
+    }
 }

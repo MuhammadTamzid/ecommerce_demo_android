@@ -3,6 +3,7 @@
     <dimen name="nav_drawer_width">235dp</dimen>
     <dimen name="layout_padding_default">10dp</dimen>
     <dimen name="navigation_drawer_width">290dp</dimen>
-    <dimen name="drawer_category_divider_height">2dp</dimen>
-    <item name="drawer_divider_height" type="dimen" format="float">0.5</item>
+    <dimen name="drawer_category_divider_height">1dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="listItemDefaultMargin">12dp</dimen>
 </resources>
