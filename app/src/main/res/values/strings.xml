@@ -5,6 +5,11 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <!--Fragment drawer string resources-->
+    <string name="all_categories">All categories</string>
+    <string name="image_drawer_category_indicator_description">Click to show submenu</string>
+    <string name="Another_click_for_leaving_app">Another click for leaving app</string>
+
     <string-array name="film_genre">
         <item>Action</item>
         <item>Comedy</item>
@@ -87,5 +92,6 @@
     <string name="comedy_movies">Comedy</string>
     <string name="thriller_movies">Thriller</string>
     <string name="movie_genre">genre</string>
+    <string name="button_text_retry">Retry</string>
 
 </resources>

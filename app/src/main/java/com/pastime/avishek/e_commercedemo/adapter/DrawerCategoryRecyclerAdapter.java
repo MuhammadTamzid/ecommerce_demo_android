@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pastime.avishek.e_commercedemo.R;
+import com.pastime.avishek.e_commercedemo.interfaces.DrawerMenuListener;
 
 import java.util.ArrayList;
 
@@ -28,10 +29,13 @@ public class DrawerCategoryRecyclerAdapter extends RecyclerView
     private final ArrayList<String> mCategories;
     private LayoutInflater mLayoutInflater;
     private Context mContext;
+    private DrawerMenuListener mDrawerMenuListener;
 
-    public DrawerCategoryRecyclerAdapter(Context context, ArrayList<String> categories) {
+    public DrawerCategoryRecyclerAdapter(Context context, ArrayList<String> categories,
+                                         DrawerMenuListener drawerMenuListener) {
         this.mContext = context;
         this.mCategories = categories;
+        this.mDrawerMenuListener = drawerMenuListener;
     }
 
     @Override
@@ -44,9 +48,15 @@ public class DrawerCategoryRecyclerAdapter extends RecyclerView
     }
 
     @Override
-    public void onBindViewHolder(DrawerRecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(DrawerRecyclerViewHolder holder, final int position) {
         DrawerRecyclerViewHolder drawerRecyclerViewHolder = (DrawerRecyclerViewHolder) holder;
         drawerRecyclerViewHolder.bindContent(mCategories.get(position));
+        drawerRecyclerViewHolder.getLayout().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerMenuListener.onDrawerItemSelected(position);
+            }
+        });
     }
 
     @Override
@@ -79,16 +89,6 @@ public class DrawerCategoryRecyclerAdapter extends RecyclerView
         public DrawerRecyclerViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            /*textViewCategory = (TextView) itemView.findViewById(R.id.text_drawer_category);
-            subMenuIndicator = (ImageView) itemView.findViewById(R.id
-            .image_drawer_category_indicator);
-            divider = itemView.findViewById(R.id.view_drawer_category_divider);*/
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // TODO: by April, 2017
-                }
-            });
         }
 
         public void bindContent(String category) {

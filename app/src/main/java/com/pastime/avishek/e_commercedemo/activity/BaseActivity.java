@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.pastime.avishek.e_commercedemo.util.L;
 
@@ -11,7 +12,7 @@ import com.pastime.avishek.e_commercedemo.util.L;
  * Created by Avishek on 4/18/17.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     private FragmentTransaction mFragmentTransaction;
 
@@ -50,5 +51,14 @@ public class BaseActivity extends AppCompatActivity {
         } catch (Exception e) {
             L.e(this, e.toString());
         }
+    }
+
+    /**
+     * Shows a {@link android.widget.Toast} message.
+     *
+     * @param message An string representing a message to be shown.
+     */
+    protected void showToastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.pastime.avishek.e_commercedemo.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,8 @@ public class ExpandableListDataSource {
         List<String> filmGenres = Arrays.asList(context.getResources().getStringArray(R.array
                 .film_genre));
 
-        List<String> actionFilms = Arrays.asList(context.getResources().getStringArray(R.array.actionFilms));
+        List<String> actionFilms = new ArrayList<>();/*Arrays.asList(context.getResources()
+        .getStringArray(R.array.actionFilms));*/
         List<String> musicalFilms = Arrays.asList(context.getResources().getStringArray(R.array
                 .musicals));
         List<String> dramaFilms = Arrays.asList(context.getResources().getStringArray(R.array

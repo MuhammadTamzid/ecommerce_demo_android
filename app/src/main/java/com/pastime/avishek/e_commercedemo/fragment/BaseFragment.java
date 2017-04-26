@@ -1,15 +1,13 @@
 package com.pastime.avishek.e_commercedemo.fragment;
 
 import android.app.Fragment;
-import android.content.res.Configuration;
-import android.os.Bundle;
 import android.widget.Toast;
 
 /**
  * Created by Avishek on 4/18/17.
  */
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
     /**
      * Shows a {@link android.widget.Toast} message.
      *

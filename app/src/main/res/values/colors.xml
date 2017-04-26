@@ -7,4 +7,10 @@
     <color name="drawer_group_divider_color">#999999</color>
     <color name="list_group_title">#808080</color>
     <color name="list_item_title">#AAAAAA</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent">#bd000000</color>
+    <color name="black_transparent_70percent">#B3000000</color>
+    <color name="semi_light_transparent">#5a000000</color>
+    <color name="semi_lighter_transparent">#2d000000</color>
 </resources>
