@@ -1,25 +1,26 @@
 package com.pastime.avishek.e_commercedemo.activity;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.util.L;
+
+import timber.log.Timber;
 
 /**
  * Created by Avishek on 4/18/17.
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
-
-    private FragmentTransaction mFragmentTransaction;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragmentTransaction = this.getFragmentManager().beginTransaction();
     }
 
     /**
@@ -29,25 +30,27 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param fragment        The fragment to be added.
      */
     protected void addFragment(int containerViewId, Fragment fragment) {
-        mFragmentTransaction.add(containerViewId, fragment);
-        mFragmentTransaction.commit();
+        FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
+        fragmentTransaction.add(containerViewId, fragment);
+        fragmentTransaction.commit();
     }
 
     /**
      * Replaces a {@link Fragment} in this activity's layout.
      *
      * @param containerViewId The container view to where add the fragment.
-     * @param fragment The fragment to be added.
-     * @param isStack Boolean flag determining whether fragment is to be added to back stack.
+     * @param fragment        The fragment to be added.
+     * @param tag         Tag of the fragment to be added to back stack.
      */
-    public void replaceFragment(int containerViewId, Fragment fragment, boolean isStack) {
+    public void replaceFragment(int containerViewId, Fragment fragment, String tag) {
+        FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
         try {
-            mFragmentTransaction.replace(containerViewId, fragment);
-            if (isStack) {
-                mFragmentTransaction.addToBackStack(null);
+            fragmentTransaction.replace(containerViewId, fragment);
+            if (tag != null) {
+                fragmentTransaction.addToBackStack(tag);
             }
-            if (mFragmentTransaction != null)
-                mFragmentTransaction.commit();
+            fragmentTransaction.commit();
+            this.getFragmentManager().executePendingTransactions();
         } catch (Exception e) {
             L.e(this, e.toString());
         }

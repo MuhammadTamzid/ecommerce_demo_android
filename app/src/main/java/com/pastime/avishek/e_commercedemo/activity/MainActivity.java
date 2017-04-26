@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.pastime.avishek.e_commercedemo.HomeFragment;
 import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.fragment.DrawerFragment;
 import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
@@ -20,7 +21,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.pastime.avishek.e_commercedemo.constants.GlobalConstants.*;
+
 public class MainActivity extends BaseActivity implements DrawerSubmenuListener {
+
 
     @BindView(R.id.drawer_layout_main)
     DrawerLayout drawerLayout;
@@ -86,6 +90,14 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
         mDrawerFragment.setUp(this, drawerLayout);
     }
 
+    private void navigateToHomeFragment(String value){
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_MESSAGE, value);
+        HomeFragment homeFragment = new HomeFragment();
+        homeFragment.setArguments(bundle);
+        replaceFragment(R.id.main_content_frame, homeFragment, null);
+    }
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -123,12 +135,15 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
     @Override
     public void onSubmenuGroupClicked(int groupPosition, String groupName) {
         showToastMessage(groupName);
+        mDrawerFragment.getDrawerView().closeDrawer();
+        navigateToHomeFragment(groupName);
     }
 
     @Override
     public void onSubmenuChildClicked(int groupPosition, int childPosition, String childName) {
         showToastMessage(childName);
         mDrawerFragment.getDrawerView().closeDrawer();
+        navigateToHomeFragment(childName);
     }
 
     @Override
