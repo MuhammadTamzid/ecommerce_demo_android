@@ -6,7 +6,22 @@ package com.pastime.avishek.e_commercedemo.model;
 
 public class MovieModel {
     private String name;
-    private boolean section;
+    private boolean isWished;
+    private String imageUrl;
+
+    public MovieModel(String name, boolean isWished, String imageUrl) {
+        this.name = name;
+        this.isWished = isWished;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public String getName() {
         return name;
@@ -16,11 +31,11 @@ public class MovieModel {
         this.name = name;
     }
 
-    public boolean isSection() {
-        return section;
+    public boolean isWished() {
+        return isWished;
     }
 
-    public void setSection(boolean section) {
-        this.section = section;
+    public void setWished(boolean wished) {
+        this.isWished = wished;
     }
 }
