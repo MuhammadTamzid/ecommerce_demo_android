@@ -6,4 +6,5 @@
     <dimen name="drawer_category_divider_height">1dp</dimen>
     <dimen name="divider_height">1dp</dimen>
     <dimen name="listItemDefaultMargin">12dp</dimen>
+    <dimen name="image_cell_grid_movie_width_height">200dp</dimen>
 </resources>
