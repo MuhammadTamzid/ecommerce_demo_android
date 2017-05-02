@@ -45,12 +45,10 @@ public class HomeFragment extends Fragment {
         mMovieModels = new ArrayList<>(10);
 
         for (int i = 0; i<10; i++ ){
-            mMovieModels.add(new MovieModel("Name " + i, false, "abcd"));
+            mMovieModels.add(new MovieModel("Name " + i, false, "https://dummyimage.com/600x400/613361/0c0f38.jpg"));
         }
         GridAdapter gridAdapter = new GridAdapter(getActivity().getApplicationContext());
         gridAdapter.setMovieModels(mMovieModels);
         productGridView.setAdapter(gridAdapter);
-
-
     }
 }
