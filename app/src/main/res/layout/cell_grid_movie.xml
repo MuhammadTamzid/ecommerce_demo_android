@@ -9,11 +9,17 @@
         android:id="@+id/image_cell_grid_movie"
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_cell_grid_movie_width_height"
-        app:srcCompat="@android:drawable/ic_menu_help"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
+        app:srcCompat="@android:drawable/ic_menu_help" />
+
     <TextView
         android:id="@+id/text_movie_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        android:background="@color/white"/>
 
 </LinearLayout>

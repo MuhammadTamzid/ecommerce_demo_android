@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pastime.avishek.e_commercedemo.HomeFragment">
+    tools:context="com.pastime.avishek.e_commercedemo.HomeFragment"
+    android:background="@android:color/darker_gray">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -10,10 +11,9 @@
         android:id="@+id/product_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="auto_fit"
-        android:stretchMode="spacingWidthUniform"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
+        android:numColumns="2"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
         android:columnWidth="180dp"/>
 
 </FrameLayout>

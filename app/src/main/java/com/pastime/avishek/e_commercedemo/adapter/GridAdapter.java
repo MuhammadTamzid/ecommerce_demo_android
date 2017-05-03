@@ -1,6 +1,7 @@
 package com.pastime.avishek.e_commercedemo.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,13 @@ import android.widget.TextView;
 
 import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.model.MovieModel;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -69,6 +76,9 @@ public class GridAdapter extends BaseAdapter {
         }
 
         viewHolder.textView.setText(mMovieModels.get(position).getName());
+        Picasso.with(mContext)
+                .load(mMovieModels.get(position).getImageUrl())
+                .into(viewHolder.imageView);
         return convertView;
     }
 
@@ -82,7 +92,15 @@ public class GridAdapter extends BaseAdapter {
         public ViewHolder(View view){
             ButterKnife.bind(this, view);
         }
+    }
 
-
+    public Drawable LoadImageFromWebOperations(String url){
+        try{
+            InputStream inputStream = (InputStream) new URL(url).getContent();
+            Drawable drawable = Drawable.createFromPath(url);
+            return drawable;
+        }  catch (Exception e) {
+            return null;
+        }
     }
 }
