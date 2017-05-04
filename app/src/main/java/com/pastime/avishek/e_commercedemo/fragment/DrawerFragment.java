@@ -1,5 +1,8 @@
 package com.pastime.avishek.e_commercedemo.fragment;
 
+import android.widget.Button;
+
+import java.util.List;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -29,7 +31,6 @@ import com.pastime.avishek.e_commercedemo.util.ExpandableListDataSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
