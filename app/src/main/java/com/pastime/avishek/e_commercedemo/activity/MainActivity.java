@@ -14,13 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.pastime.avishek.e_commercedemo.fragment.HomeFragment;
 import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.fragment.DrawerFragment;
+import com.pastime.avishek.e_commercedemo.fragment.HomeFragment;
 import com.pastime.avishek.e_commercedemo.fragment.ProductFragment;
 import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
 import com.pastime.avishek.e_commercedemo.interfaces.FragmentCommunicator;
 import com.pastime.avishek.e_commercedemo.model.MovieModel;
+import com.pastime.avishek.e_commercedemo.util.ExpandableListDataSource;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +38,8 @@ import timber.log.Timber;
 import static com.pastime.avishek.e_commercedemo.constants.GlobalConstants.KEY_MESSAGE;
 
 @RuntimePermissions
-public class MainActivity extends BaseActivity implements DrawerSubmenuListener, FragmentCommunicator {
+public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
+        FragmentCommunicator {
 
     @BindView(R.id.drawer_layout_main)
     DrawerLayout drawerLayout;
@@ -61,11 +65,15 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
 
         setUpDrawer();
 
+        navigateToHomeFragment(new ArrayList<>(ExpandableListDataSource.getData(this)
+                .keySet()).get(0));
+
         MainActivityPermissionsDispatcher.openStorageWithCheck(this);
     }
 
     private void setUpToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        //toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
         mActionBar = getSupportActionBar();
         if (mActionBar != null) {
@@ -137,6 +145,13 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        switch (id) {
+            case R.id.action_search:
+            case R.id.action_cart:
+            case R.id.action_settings:
+                showToastMessage(R.string.message_future_implementation);
+        }
+
         // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -146,14 +161,12 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
 
     @Override
     public void onSubmenuGroupClicked(int groupPosition, String groupName) {
-        showToastMessage(groupName);
         mDrawerFragment.getDrawerView().closeDrawer();
         navigateToHomeFragment(groupName);
     }
 
     @Override
     public void onSubmenuChildClicked(int groupPosition, int childPosition, String childName) {
-        showToastMessage(childName);
         mDrawerFragment.getDrawerView().closeDrawer();
         navigateToHomeFragment(childName);
     }
@@ -186,7 +199,8 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode,
+                grantResults);
     }
 
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission

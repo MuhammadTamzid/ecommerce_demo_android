@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FFA500</color>
     <color name="white">#ffffff</color>
     <color name="drawer_group_divider_color">#999999</color>
     <color name="list_group_title">#808080</color>
@@ -13,4 +13,5 @@
     <color name="black_transparent_70percent">#B3000000</color>
     <color name="semi_light_transparent">#5a000000</color>
     <color name="semi_lighter_transparent">#2d000000</color>
+    <color name="toolbar_title">#ffffff</color>
 </resources>

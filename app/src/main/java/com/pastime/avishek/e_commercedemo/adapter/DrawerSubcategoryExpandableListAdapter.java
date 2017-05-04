@@ -2,13 +2,17 @@ package com.pastime.avishek.e_commercedemo.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
 
@@ -27,15 +31,19 @@ public class DrawerSubcategoryExpandableListAdapter extends BaseExpandableListAd
     private Map<String, List<String>> mExpandableListDetail;
     private LayoutInflater mLayoutInflater;
     private DrawerSubmenuListener mDrawerSubmenuListener;
+    private SparseArray<GroupViewHolder> mGroupViewHolders;
+    private Context mContext;
 
     public DrawerSubcategoryExpandableListAdapter(Context context, List<String> expandableListTitle,
                                                   Map<String, List<String>> expandableListDetail,
                                                   DrawerSubmenuListener drawerSubmenuListener) {
+        mContext = context;
         mExpandableListTitle = expandableListTitle;
         mExpandableListDetail = expandableListDetail;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context
                 .LAYOUT_INFLATER_SERVICE);
         mDrawerSubmenuListener = drawerSubmenuListener;
+        mGroupViewHolders = new SparseArray<>();
     }
 
     @Override
@@ -96,11 +104,12 @@ public class DrawerSubcategoryExpandableListAdapter extends BaseExpandableListAd
     @Override
     public View getGroupView(final int listPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        GroupViewHolder viewHolder;
+        final GroupViewHolder viewHolder;
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.list_group, parent, false);
             viewHolder = new GroupViewHolder(convertView);
             convertView.setTag(viewHolder);
+            mGroupViewHolders.put(listPosition, viewHolder);
         } else {
             viewHolder = (GroupViewHolder) convertView.getTag();
         }
@@ -122,6 +131,27 @@ public class DrawerSubcategoryExpandableListAdapter extends BaseExpandableListAd
             });
         }
         return convertView;
+    }
+
+    @Override
+    public void onGroupExpanded(int groupPosition) {
+        super.onGroupExpanded(groupPosition);
+        animateIndicator(groupPosition);
+    }
+
+    @Override
+    public void onGroupCollapsed(int groupPosition) {
+        super.onGroupCollapsed(groupPosition);
+        animateIndicator(groupPosition);
+    }
+
+    private void animateIndicator(int groupPosition) {
+        YoYo.with(Techniques.RotateIn)
+                .duration(mContext.getResources().getInteger(R.integer
+                        .expandable_indicator_animation_duration))
+                .pivot(YoYo.CENTER_PIVOT, YoYo.CENTER_PIVOT)
+                .interpolate(new AccelerateDecelerateInterpolator())
+                .playOn(mGroupViewHolders.get(groupPosition).imageIndicator);
     }
 
     @Override

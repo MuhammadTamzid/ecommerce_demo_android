@@ -70,10 +70,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Shows a {@link android.widget.Toast} message.
      *
-     * @param message An string representing a message to be shown.
+     * @param message A string representing a message to be shown.
      */
     protected void showToastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Shows a {@link android.widget.Toast} message.
+     * 
+     * @param stringId An integer representing the ID of a string resource
+     */
+    protected void showToastMessage(int stringId) {
+        showToastMessage(getResources().getString(stringId));
     }
 
     /**

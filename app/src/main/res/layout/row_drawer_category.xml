@@ -42,10 +42,7 @@
             android:src="@drawable/arrow_right_black"/>
     </LinearLayout>
 
-    <View
+    <include
         android:id="@+id/view_drawer_category_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:layout_below="@id/linear_drawer_row"
-        android:background="@android:color/darker_gray"/>
+        layout="@layout/view_divider"/>
 </RelativeLayout>

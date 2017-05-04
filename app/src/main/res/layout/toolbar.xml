@@ -6,4 +6,5 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     android:elevation="3dp"
+    app:titleTextColor="@color/toolbar_title"
     app:popupTheme="@style/AppTheme.PopupOverlay"/>
