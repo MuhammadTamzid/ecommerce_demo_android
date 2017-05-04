@@ -5,6 +5,5 @@ package com.pastime.avishek.e_commercedemo.constants;
  */
 
 public class GlobalConstants {
-    public static final String EXTRA_MESSAGE = "message";
-    public static final String TAG_FRAGMENT_HOME = "HomeFragmentTag";
+    public static final String KEY_MESSAGE = "message";
 }

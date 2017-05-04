@@ -94,13 +94,4 @@ public class GridAdapter extends BaseAdapter {
         }
     }
 
-    public Drawable LoadImageFromWebOperations(String url){
-        try{
-            InputStream inputStream = (InputStream) new URL(url).getContent();
-            Drawable drawable = Drawable.createFromPath(url);
-            return drawable;
-        }  catch (Exception e) {
-            return null;
-        }
-    }
 }
