@@ -1,10 +1,12 @@
 package com.pastime.avishek.e_commercedemo.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Avishek on 4/18/17.
  */
 
-public class MovieModel {
+public class MovieModel implements Serializable {
     private String name;
     private boolean isWished;
     private String imageUrl;

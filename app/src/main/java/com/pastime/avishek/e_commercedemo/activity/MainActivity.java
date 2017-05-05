@@ -14,10 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.pastime.avishek.e_commercedemo.HomeFragment;
+import com.pastime.avishek.e_commercedemo.fragment.HomeFragment;
 import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.fragment.DrawerFragment;
+import com.pastime.avishek.e_commercedemo.fragment.ProductFragment;
 import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
+import com.pastime.avishek.e_commercedemo.interfaces.FragmentCommunicator;
+import com.pastime.avishek.e_commercedemo.model.MovieModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,10 +32,10 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 
-import static com.pastime.avishek.e_commercedemo.constants.GlobalConstants.EXTRA_MESSAGE;
+import static com.pastime.avishek.e_commercedemo.constants.GlobalConstants.KEY_MESSAGE;
 
 @RuntimePermissions
-public class MainActivity extends BaseActivity implements DrawerSubmenuListener {
+public class MainActivity extends BaseActivity implements DrawerSubmenuListener, FragmentCommunicator {
 
     @BindView(R.id.drawer_layout_main)
     DrawerLayout drawerLayout;
@@ -102,7 +105,7 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
 
     private void navigateToHomeFragment(String value) {
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_MESSAGE, value);
+        bundle.putString(KEY_MESSAGE, value);
         HomeFragment homeFragment = new HomeFragment();
         homeFragment.setArguments(bundle);
         replaceFragment(R.id.main_content_frame, homeFragment, null);
@@ -138,7 +141,6 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -215,5 +217,14 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener 
             .WRITE_EXTERNAL_STORAGE})
     void onStorageNeverAskAgain() {
         showToastMessage(getResources().getString(R.string.permission_never_ask_again));
+    }
+
+    @Override
+    public void onFragmentResponse(Object object) {
+        ProductFragment productFragment = new ProductFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(productFragment.getFragmentTag(), (MovieModel) object);
+        productFragment.setArguments(bundle);
+        replaceFragment(R.id.main_content_frame, productFragment, productFragment.getFragmentTag());
     }
 }
