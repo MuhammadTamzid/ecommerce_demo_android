@@ -2,29 +2,37 @@ package com.pastime.avishek.e_commercedemo.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
 
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Avishek on 4/18/17.
  */
 
 public class DrawerSubcategoryExpandableListAdapter extends BaseExpandableListAdapter {
-    private Context mContext;
     private List<String> mExpandableListTitle;
     private Map<String, List<String>> mExpandableListDetail;
     private LayoutInflater mLayoutInflater;
     private DrawerSubmenuListener mDrawerSubmenuListener;
+    private SparseArray<GroupViewHolder> mGroupViewHolders;
+    private Context mContext;
 
     public DrawerSubcategoryExpandableListAdapter(Context context, List<String> expandableListTitle,
                                                   Map<String, List<String>> expandableListDetail,
@@ -32,9 +40,10 @@ public class DrawerSubcategoryExpandableListAdapter extends BaseExpandableListAd
         mContext = context;
         mExpandableListTitle = expandableListTitle;
         mExpandableListDetail = expandableListDetail;
-        mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context
+        mLayoutInflater = (LayoutInflater) context.getSystemService(Context
                 .LAYOUT_INFLATER_SERVICE);
         mDrawerSubmenuListener = drawerSubmenuListener;
+        mGroupViewHolders = new SparseArray<>();
     }
 
     @Override
@@ -52,12 +61,15 @@ public class DrawerSubcategoryExpandableListAdapter extends BaseExpandableListAd
     public View getChildView(final int listPosition, final int expandedListPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         final String expandedListText = (String) getChild(listPosition, expandedListPosition);
+        ChildViewHolder viewHolder;
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.list_item, null);
+            viewHolder = new ChildViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ChildViewHolder) convertView.getTag();
         }
-        TextView expandedListTextView = (TextView) convertView
-                .findViewById(R.id.expandedListItem);
-        expandedListTextView.setText(expandedListText);
+        viewHolder.expandedListTextView.setText(expandedListText);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,51 +104,25 @@ public class DrawerSubcategoryExpandableListAdapter extends BaseExpandableListAd
     @Override
     public View getGroupView(final int listPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        String listTitle = (String) getGroup(listPosition);
+        final GroupViewHolder viewHolder;
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.list_group, null);
-        }
-        TextView listTitleTextView = (TextView) convertView
-                .findViewById(R.id.listTitle);
-        ImageView imageIndicator = (ImageView) convertView.findViewById(R.id
-                .image_drawer_subcategory_indicator);
-        listTitleTextView.setTypeface(null, Typeface.BOLD);
-        listTitleTextView.setText(listTitle);
-        if (isExpanded) {
-            imageIndicator.setImageResource(android.R.drawable.arrow_up_float);
-        } else {
-            imageIndicator.setImageResource(android.R.drawable.arrow_down_float);
-        }
-        if (getChildrenCount(listPosition) == 0) {
-            imageIndicator.setVisibility(View.GONE);
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mDrawerSubmenuListener.onSubmenuGroupClicked(listPosition, (String) getGroup
-                            (listPosition));
-                }
-            });
-        }
-        return convertView;
-
-        // TODO:
-        /*String listTitle = (String) getGroup(listPosition);
-        ViewHolder viewHolder;
-        if (convertView == null) {
-            viewHolder =  new ViewHolder(mLayoutInflater.inflate(R.layout.list_group,
-                    null));
-            convertView = mLayoutInflater.inflate(R.layout.list_group, null);
+            convertView = mLayoutInflater.inflate(R.layout.list_group, parent, false);
+            viewHolder = new GroupViewHolder(convertView);
             convertView.setTag(viewHolder);
+            mGroupViewHolders.put(listPosition, viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (GroupViewHolder) convertView.getTag();
         }
         viewHolder.listTitleTextView.setTypeface(null, Typeface.BOLD);
-        viewHolder.listTitleTextView.setText(listTitle);
+        viewHolder.listTitleTextView.setText((String) getGroup(listPosition));
         if (isExpanded) {
-            viewHolder.imageIndicator.setImageResource(android.R.drawable.arrow_up_float);
+            viewHolder.imageIndicator.setImageResource(R.drawable.arrow_up_black);
         } else {
-            viewHolder.imageIndicator.setImageResource(android.R.drawable.arrow_down_float);
+            viewHolder.imageIndicator.setImageResource(R.drawable.arrow_down_black);
         }
+
+
+
         if (getChildrenCount(listPosition) == 0) {
             viewHolder.imageIndicator.setVisibility(View.GONE);
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -147,16 +133,58 @@ public class DrawerSubcategoryExpandableListAdapter extends BaseExpandableListAd
                 }
             });
         }
-        return convertView;*/
+        return convertView;
+    }
+
+    @Override
+    public void onGroupExpanded(int groupPosition) {
+        super.onGroupExpanded(groupPosition);
+        animateIndicator(groupPosition);
+    }
+
+    @Override
+    public void onGroupCollapsed(int groupPosition) {
+        super.onGroupCollapsed(groupPosition);
+        animateIndicator(groupPosition);
+    }
+
+    private void animateIndicator(int groupPosition) {
+        YoYo.with(Techniques.RotateIn)
+                .duration(mContext.getResources().getInteger(R.integer
+                        .expandable_indicator_animation_duration))
+                .pivot(YoYo.CENTER_PIVOT, YoYo.CENTER_PIVOT)
+                .interpolate(new AccelerateDecelerateInterpolator())
+                .playOn(mGroupViewHolders.get(groupPosition).imageIndicator);
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isChildSelectable(int listPosition, int expandedListPosition) {
         return true;
+    }
+
+    public class GroupViewHolder {
+
+        @BindView(R.id.listTitle)
+        TextView listTitleTextView;
+        @BindView(R.id.image_drawer_subcategory_indicator)
+        ImageView imageIndicator;
+
+        public GroupViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
+    public class ChildViewHolder {
+        @BindView(R.id.expandedListItem)
+        TextView expandedListTextView;
+
+        public ChildViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }
