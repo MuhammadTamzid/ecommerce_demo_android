@@ -2,4 +2,7 @@
     <integer name="card_flip_time_full">300</integer>
     <integer name="card_flip_time_half">150</integer>
     <integer name="grid_columns">2</integer>
+    <integer name="expandable_indicator_animation_duration">250</integer>
+    <integer name="wish_icon_animation_duration">500</integer>
+    <integer name="title_fragment_home_animation_duration">1500</integer>
 </resources>

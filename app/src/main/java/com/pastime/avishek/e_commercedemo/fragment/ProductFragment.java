@@ -1,6 +1,5 @@
 package com.pastime.avishek.e_commercedemo.fragment;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +7,8 @@ import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,14 +16,14 @@ import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.model.MovieModel;
 import com.squareup.picasso.Picasso;
 
-import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by noor_framgia on 5/4/17.
  */
 
-public class ProductFragment extends BaseFragment {
+public class ProductFragment extends BaseFragment implements View.OnClickListener {
 
     @BindView(R.id.image_product)
     ImageView imageView;
@@ -30,15 +31,22 @@ public class ProductFragment extends BaseFragment {
     @BindView(R.id.text_product_name)
     TextView textView;
 
+    @BindView(R.id.image_share)
+    ImageButton imageButtonShare;
+
+    @BindView(R.id.button_buy)
+    Button buttonBuy;
+
     private View mLayout;
 
-    public String getFragmentTag(){
+    public String getFragmentTag() {
         return getClass().getSimpleName();
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle
+            savedInstanceState) {
         mLayout = inflater.inflate(R.layout.fragment_product, container, false);
         ButterKnife.bind(this, mLayout);
 
@@ -50,15 +58,27 @@ public class ProductFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getProductData();
+        imageButtonShare.setOnClickListener(this);
+        buttonBuy.setOnClickListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void getProductData(){
+    public void getProductData() {
         Bundle bundle = this.getArguments();
         MovieModel movieModel = (MovieModel) bundle.get(getFragmentTag());
         textView.setText(movieModel.getName());
         Picasso.with(getContext())
                 .load(movieModel.getImageUrl())
                 .into(imageView);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.image_share:
+            case R.id.button_buy:
+                showToastMessage(getActivity().getResources().getString(R.string
+                        .message_future_implementation));
+        }
     }
 }

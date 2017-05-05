@@ -1,5 +1,26 @@
-<menu
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
-    
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:android1="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MyActivity">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_menu_search_white"
+        android:orderInCategory="100"
+        android:title="@string/menu_search"
+        android1:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_cart"
+        android:icon="@drawable/ic_menu_cart_white"
+        android:orderInCategory="101"
+        android:title="@string/menu_cart"
+        android1:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_menu_settings_white"
+        android:orderInCategory="102"
+        android:title="@string/menu_settings"
+        android1:showAsAction="never"/>
 </menu>
