@@ -328,4 +328,9 @@ public class DrawerFragment extends BaseFragment implements View.OnClickListener
         super.onDetach();
         mDrawerListener = null;
     }
+
+    @Override
+    public String getFragmentTag() {
+        return getClass().getSimpleName();
+    }
 }

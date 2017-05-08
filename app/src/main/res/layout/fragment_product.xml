@@ -49,4 +49,8 @@
             android:background="@color/colorAccent"
             android:text="@string/button_fragment_product_default_text"/>
     </LinearLayout>
+
+    <include layout="@layout/view_progress"/>
+
+    <include layout="@layout/view_retry"/>
 </RelativeLayout>

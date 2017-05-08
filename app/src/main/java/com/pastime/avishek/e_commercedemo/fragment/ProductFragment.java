@@ -1,5 +1,6 @@
 package com.pastime.avishek.e_commercedemo.fragment;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pastime.avishek.e_commercedemo.R;
+import com.pastime.avishek.e_commercedemo.interfaces.LoadDataView;
 import com.pastime.avishek.e_commercedemo.model.MovieModel;
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +26,7 @@ import butterknife.ButterKnife;
  * Created by noor_framgia on 5/4/17.
  */
 
-public class ProductFragment extends BaseFragment implements View.OnClickListener {
+public class ProductFragment extends BaseFragment implements View.OnClickListener, LoadDataView {
 
     @BindView(R.id.image_product)
     ImageView imageView;
@@ -37,8 +40,15 @@ public class ProductFragment extends BaseFragment implements View.OnClickListene
     @BindView(R.id.button_buy)
     Button buttonBuy;
 
+    @BindView(R.id.relative_progress)
+    RelativeLayout progressLayout;
+
+    @BindView(R.id.relative_retry)
+    RelativeLayout retryLayout;
+
     private View mLayout;
 
+    @Override
     public String getFragmentTag() {
         return getClass().getSimpleName();
     }
@@ -80,5 +90,35 @@ public class ProductFragment extends BaseFragment implements View.OnClickListene
                 showToastMessage(getActivity().getResources().getString(R.string
                         .message_future_implementation));
         }
+    }
+
+    @Override
+    public void showLoading() {
+        progressLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        progressLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showRetry() {
+        retryLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideRetry() {
+        retryLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showError(String message) {
+        showToastMessage(message);
+    }
+
+    @Override
+    public Context context() {
+        return getActivity().getApplicationContext();
     }
 }

@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.pastime.avishek.e_commercedemo.R;
-import com.pastime.avishek.e_commercedemo.util.L;
+import com.pastime.avishek.e_commercedemo.util.T;
 
 import permissions.dispatcher.PermissionRequest;
 
@@ -63,7 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             fragmentTransaction.commit();
             this.getFragmentManager().executePendingTransactions();
         } catch (Exception e) {
-            L.e(this, e.toString());
+            T.e(e);
         }
     }
 
