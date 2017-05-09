@@ -72,8 +72,12 @@ public class HomeFragment extends BaseFragment implements LoadDataView {
         super.onActivityCreated(savedInstanceState);
         mFragmentCommunicator = (FragmentCommunicator) getActivity();
         getDataFromActivity();
-        getGridViewData();
-        animateTitle();
+        if (mMovieModels == null || mMovieModels.isEmpty()) {
+            getGridViewData();
+            animateTitle();
+        } else {
+            setGridViewAdapter();
+        }
     }
 
     private void getDataFromActivity() {

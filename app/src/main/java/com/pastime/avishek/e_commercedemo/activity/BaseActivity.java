@@ -1,8 +1,6 @@
 package com.pastime.avishek.e_commercedemo.activity;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.pastime.avishek.e_commercedemo.R;
-import com.pastime.avishek.e_commercedemo.util.T;
 
 import permissions.dispatcher.PermissionRequest;
 
@@ -27,44 +24,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    /**
-     * Adds a {@link Fragment} to this activity's layout.
-     *
-     * @param containerViewId The container view to where add the fragment.
-     * @param fragment        The fragment to be added.
-     */
-    protected void addFragment(int containerViewId, Fragment fragment) {
-        FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
-        fragmentTransaction.add(containerViewId, fragment);
-        fragmentTransaction.commit();
-    }
-
-    /**
-     * Replaces a {@link Fragment} in this activity's layout.
-     *
-     * @param containerViewId The container view to where add the fragment.
-     * @param fragment        The fragment to be added.
-     * @param tag             Tag of the fragment to be added to back stack.
-     */
-    public void replaceFragment(int containerViewId, Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
-        try {
-            fragmentTransaction.setCustomAnimations(
-                    R.animator.card_flip_right_in,
-                    R.animator.card_flip_right_out,
-                    R.animator.card_flip_left_in,
-                    R.animator.card_flip_left_out);
-            fragmentTransaction.replace(containerViewId, fragment);
-            if (tag != null) {
-                fragmentTransaction.addToBackStack(tag);
-            }
-            fragmentTransaction.commit();
-            this.getFragmentManager().executePendingTransactions();
-        } catch (Exception e) {
-            T.e(e);
-        }
     }
 
     /**
