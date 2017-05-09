@@ -17,12 +17,12 @@ import android.view.View;
 
 import com.pastime.avishek.e_commercedemo.R;
 import com.pastime.avishek.e_commercedemo.fragment.DrawerFragment;
-import com.pastime.avishek.e_commercedemo.fragment.HomeFragment;
-import com.pastime.avishek.e_commercedemo.fragment.ProductFragment;
 import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
 import com.pastime.avishek.e_commercedemo.interfaces.FragmentCommunicator;
+import com.pastime.avishek.e_commercedemo.interfaces.NavigationManager;
 import com.pastime.avishek.e_commercedemo.model.MovieModel;
 import com.pastime.avishek.e_commercedemo.util.ExpandableListDataSource;
+import com.pastime.avishek.e_commercedemo.util.Navigator;
 import com.pastime.avishek.e_commercedemo.util.T;
 
 import java.util.ArrayList;
@@ -36,8 +36,6 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
-import static com.pastime.avishek.e_commercedemo.constants.GlobalConstants.KEY_MESSAGE;
-
 @RuntimePermissions
 public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
         FragmentCommunicator {
@@ -48,6 +46,7 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
     private ActionBarDrawerToggle mDrawerToggle;
     private ActionBar mActionBar; // might be needed later
     private DrawerFragment mDrawerFragment;
+    private NavigationManager mNavigationManager;
     /**
      * Indicates that app will be closed on next back press
      */
@@ -79,7 +78,9 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
 
         setUpDrawer();
 
-        navigateToHomeFragment(new ArrayList<>(ExpandableListDataSource.getData(this)
+        mNavigationManager = Navigator.getInstance(this);
+
+        mNavigationManager.navigateToHomeFragment(new ArrayList<>(ExpandableListDataSource.getData(this)
                 .keySet()).get(0));
 
         MainActivityPermissionsDispatcher.openStorageWithCheck(this);
@@ -87,7 +88,6 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
 
     private void setUpToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        //toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
         mActionBar = getSupportActionBar();
         if (mActionBar != null) {
@@ -182,13 +182,13 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
     @Override
     public void onSubmenuGroupClicked(int groupPosition, String groupName) {
         mDrawerFragment.getDrawerView().closeDrawer();
-        navigateToHomeFragment(groupName);
+        mNavigationManager.navigateToHomeFragment(groupName);
     }
 
     @Override
     public void onSubmenuChildClicked(int groupPosition, int childPosition, String childName) {
         mDrawerFragment.getDrawerView().closeDrawer();
-        navigateToHomeFragment(childName);
+        mNavigationManager.navigateToHomeFragment(childName);
     }
 
     @Override
@@ -255,22 +255,6 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
 
     @Override
     public void onFragmentResponse(Object object) {
-        navigateToProductDetailsFragment((MovieModel) object);
-    }
-
-    private void navigateToHomeFragment(String value) {
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_MESSAGE, value);
-        HomeFragment homeFragment = new HomeFragment();
-        homeFragment.setArguments(bundle);
-        replaceFragment(R.id.main_content_frame, homeFragment, null);
-    }
-
-    private void navigateToProductDetailsFragment(MovieModel movieModel) {
-        ProductFragment productFragment = new ProductFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(productFragment.getFragmentTag(), movieModel);
-        productFragment.setArguments(bundle);
-        replaceFragment(R.id.main_content_frame, productFragment, productFragment.getFragmentTag());
+        mNavigationManager.navigateToProductDetailsFragment((MovieModel) object);
     }
 }
