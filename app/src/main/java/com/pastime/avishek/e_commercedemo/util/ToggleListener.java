@@ -13,12 +13,7 @@ public abstract class ToggleListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if(mToggleState) {
-            mToggleState = false;
-            onToggle(mToggleState);
-        } else {
-            mToggleState = true;
-            onToggle(mToggleState);
-        }
+        mToggleState = !mToggleState;
+        onToggle(mToggleState);
     }
 }

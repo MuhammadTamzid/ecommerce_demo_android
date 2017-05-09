@@ -73,22 +73,21 @@ public class GridAdapter extends BaseAdapter {
         }
 
         viewHolder.textView.setText(mMovieModels.get(position).getName());
+
         Picasso.with(mContext)
                 .load(mMovieModels.get(position).getImageUrl())
+                .placeholder(R.drawable.progress_animation)
                 .into(viewHolder.imageView);
+
         viewHolder.imageWish.setOnClickListener(new ToggleListener() {
             @Override
             public void onToggle(boolean isOn) {
-                if (isOn) {
-                    viewHolder.imageWish.setImageDrawable(mContext.getResources()
-                            .getDrawable(R
-                                    .drawable.ic_wishlist_selected_black));
-                    animateView(viewHolder.imageWish);
-                } else {
-                    viewHolder.imageWish.setImageDrawable(mContext.getResources().getDrawable
-                            (R.drawable.ic_wishlist_deselected_black));
-                    animateView(viewHolder.imageWish);
-                }
+                viewHolder.imageWish.setImageDrawable(isOn ? mContext.getResources()
+                        .getDrawable(R.drawable.ic_wishlist_selected_black)
+                        :
+                        mContext.getResources()
+                                .getDrawable(R.drawable.ic_wishlist_deselected_black));
+                animateView(viewHolder.imageWish);
 
             }
         });

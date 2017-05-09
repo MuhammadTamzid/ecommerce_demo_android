@@ -16,4 +16,11 @@ public abstract class BaseFragment extends Fragment {
     protected void showToastMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * Returns the tag of a {@link Fragment} to add to back stack.
+     *
+     * @return {@link String} representing the tag of the fragment.
+     */
+    public abstract String getFragmentTag();
 }

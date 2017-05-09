@@ -1,6 +1,7 @@
 package com.pastime.avishek.e_commercedemo.activity;
 
 import android.Manifest;
+import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import com.pastime.avishek.e_commercedemo.interfaces.DrawerSubmenuListener;
 import com.pastime.avishek.e_commercedemo.interfaces.FragmentCommunicator;
 import com.pastime.avishek.e_commercedemo.model.MovieModel;
 import com.pastime.avishek.e_commercedemo.util.ExpandableListDataSource;
+import com.pastime.avishek.e_commercedemo.util.T;
 
 import java.util.ArrayList;
 
@@ -33,7 +35,6 @@ import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
-import timber.log.Timber;
 
 import static com.pastime.avishek.e_commercedemo.constants.GlobalConstants.KEY_MESSAGE;
 
@@ -51,6 +52,19 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
      * Indicates that app will be closed on next back press
      */
     private boolean isAppReadyToFinish = false;
+
+    private FragmentManager.OnBackStackChangedListener
+            mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+        @Override
+        public void onBackStackChanged() {
+            syncActionBarArrowState();
+        }
+    };
+
+    private void syncActionBarArrowState() {
+        int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
+        mDrawerToggle.setDrawerIndicatorEnabled(backStackEntryCount == 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +91,10 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
         setSupportActionBar(toolbar);
         mActionBar = getSupportActionBar();
         if (mActionBar != null) {
+            mActionBar.setDisplayShowHomeEnabled(true);
             mActionBar.setDisplayHomeAsUpEnabled(true);
-            mActionBar.setHomeButtonEnabled(true);
         } else {
-            Timber.e(new RuntimeException(), "GetSupportActionBar returned null.");
+            T.e(new RuntimeException(), "GetSupportActionBar returned null.");
         }
     }
 
@@ -97,26 +111,26 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
+                syncActionBarArrowState();
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(mDrawerToggle);
+        getFragmentManager().addOnBackStackChangedListener(mOnBackStackChangedListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        getFragmentManager().removeOnBackStackChangedListener(mOnBackStackChangedListener);
+        super.onDestroy();
     }
 
     private void setUpDrawerFragment() {
         mDrawerFragment = (DrawerFragment) getFragmentManager().findFragmentById(R.id
                 .main_navigation_drawer_fragment);
         mDrawerFragment.setUp(this, drawerLayout);
-    }
-
-    private void navigateToHomeFragment(String value) {
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_MESSAGE, value);
-        HomeFragment homeFragment = new HomeFragment();
-        homeFragment.setArguments(bundle);
-        replaceFragment(R.id.main_content_frame, homeFragment, null);
     }
 
     @Override
@@ -145,15 +159,21 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == android.R.id.home &&
+                getFragmentManager().popBackStackImmediate()) {
+            return true;
+        }
+
         switch (id) {
             case R.id.action_search:
             case R.id.action_cart:
             case R.id.action_settings:
                 showToastMessage(R.string.message_future_implementation);
+                break;
         }
 
         // Activate the navigation drawer toggle
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (mDrawerToggle.isDrawerIndicatorEnabled() && mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -235,9 +255,21 @@ public class MainActivity extends BaseActivity implements DrawerSubmenuListener,
 
     @Override
     public void onFragmentResponse(Object object) {
+        navigateToProductDetailsFragment((MovieModel) object);
+    }
+
+    private void navigateToHomeFragment(String value) {
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_MESSAGE, value);
+        HomeFragment homeFragment = new HomeFragment();
+        homeFragment.setArguments(bundle);
+        replaceFragment(R.id.main_content_frame, homeFragment, null);
+    }
+
+    private void navigateToProductDetailsFragment(MovieModel movieModel) {
         ProductFragment productFragment = new ProductFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(productFragment.getFragmentTag(), (MovieModel) object);
+        bundle.putSerializable(productFragment.getFragmentTag(), movieModel);
         productFragment.setArguments(bundle);
         replaceFragment(R.id.main_content_frame, productFragment, productFragment.getFragmentTag());
     }
